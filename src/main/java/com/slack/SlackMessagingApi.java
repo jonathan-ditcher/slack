@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -87,7 +88,7 @@ public class SlackMessagingApi {
         logger.trace("accessToken["+accessToken+"]");
 
         final String endpoint = "im.list";
-        ListChannelsResponse listChannelsResponse = this.executeGet(accessToken, endpoint, ListChannelsResponse.class);
+        ListChannelsResponse listChannelsResponse = this.executeGet(Collections.singletonList(new BasicNameValuePair("token", accessToken)), endpoint, ListChannelsResponse.class);
 
         return listChannelsResponse;
     }
@@ -96,13 +97,73 @@ public class SlackMessagingApi {
         logger.trace("accessToken["+accessToken+"]");
 
         final String endpoint = "users.list";
-        ListUsersResponse listUsersResponse = this.executeGet(accessToken, endpoint, ListUsersResponse.class);
+        ListUsersResponse listUsersResponse = this.executeGet(Collections.singletonList(new BasicNameValuePair("token", accessToken)), endpoint, ListUsersResponse.class);
 
         return listUsersResponse;
     }
 
-    private <T extends SlackResponse> T executeGet(String accessToken, String endpoint, Class<T> clazz) {
+    public ChannelHistoryResponse getChannelHistory(String accessToken, String channel) {
         logger.trace("accessToken["+accessToken+"]");
+
+        final String endpoint = "channels.history";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        ChannelHistoryResponse channelHistoryResponse = this.executeGet(params, endpoint, ChannelHistoryResponse.class);
+
+        return channelHistoryResponse;
+    }
+
+    public ChannelRepliesResponse getChannelReplies(String accessToken, String channel, Double thread_ts) {
+        logger.trace("accessToken["+accessToken+"]");
+
+        double f = 1234567890.123456;
+
+        final String endpoint = "channels.replies";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        DecimalFormat df = new DecimalFormat("#.000000");
+        params.add(new BasicNameValuePair("thread_ts", df.format(thread_ts)));
+
+        ChannelRepliesResponse channelRepliesResponse = this.executeGet(params, endpoint, ChannelRepliesResponse.class);
+
+        return channelRepliesResponse;
+    }
+
+    public ChannelInfoResponse getChannelInfo(String accessToken, String channel) {
+        logger.trace("accessToken["+accessToken+"]");
+
+        double f = 1234567890.123456;
+
+        final String endpoint = "channels.info";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        ChannelInfoResponse channelInfoResponse = this.executeGet(params, endpoint, ChannelInfoResponse.class);
+
+        return channelInfoResponse;
+    }
+
+    public ChannelListResponse getChannelList(String accessToken) {
+        logger.trace("accessToken["+accessToken+"]");
+
+        double f = 1234567890.123456;
+
+        final String endpoint = "channels.list";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        ChannelListResponse channelListResponse = this.executeGet(params, endpoint, ChannelListResponse.class);
+
+        return channelListResponse;
+    }
+
+    private <T extends SlackResponse> T executeGet(List<NameValuePair> params, String endpoint, Class<T> clazz) {
+        logger.trace("params["+params+"]");
 
         T slackResponse = null;
 
@@ -110,9 +171,7 @@ public class SlackMessagingApi {
 
             HttpGet request = new HttpGet(END_POINT + endpoint);
 
-            URI uri = new URIBuilder(request.getURI()).
-                    addParameter("token", accessToken).
-                    build();
+            URI uri = new URIBuilder(request.getURI()).addParameters(params).build();
             request.setURI(uri);
 
             logger.trace("executing request " + request.getRequestLine());
