@@ -102,6 +102,21 @@ public class SlackMessagingApi {
         return listUsersResponse;
     }
 
+    public BotInfoResponse getBotInfo(String accessToken, String bot) {
+        logger.trace("accessToken["+accessToken+"]");
+
+        final String endpoint = "bots.info";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        if(!StringUtils.isEmpty(bot))
+            params.add(new BasicNameValuePair("bot", bot));
+
+        BotInfoResponse botInfoResponse = this.executeGet(params, endpoint, BotInfoResponse.class);
+
+        return botInfoResponse;
+    }
+
     public ChannelHistoryResponse getChannelHistory(String accessToken, String channel) {
         logger.trace("accessToken["+accessToken+"]");
 
@@ -117,8 +132,6 @@ public class SlackMessagingApi {
 
     public ChannelRepliesResponse getChannelReplies(String accessToken, String channel, Double thread_ts) {
         logger.trace("accessToken["+accessToken+"]");
-
-        double f = 1234567890.123456;
 
         final String endpoint = "channels.replies";
         List<NameValuePair> params = new LinkedList<>();
