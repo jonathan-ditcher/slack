@@ -35,7 +35,7 @@ public class SlackMessagingApi {
 
     private static final Logger logger = LoggerFactory.getLogger(SlackMessagingApi.class);
     private static final String END_POINT = "https://slack.com/api/";
-
+    private static final String DEFAULT_ENCODING = "UTF-8";
     private static final Set<Scope> DEFAULT_SCOPES = new HashSet<>(Arrays.asList(
             Scope.CHANNELS_READ,
             Scope.CHAT_WRITE_USER,
@@ -66,6 +66,88 @@ public class SlackMessagingApi {
         AccessTokenResponse accessTokenResponse = this.executePost(endpoint, AccessTokenResponse.class, nameValuePairs);
 
         return accessTokenResponse;
+    }
+
+    public RevokeTokenResponse revokeAccessToken(String token) {
+        logger.trace("token[{}]", token);
+
+        final String endpoint = "oauth.revoke ";
+
+        List<NameValuePair> nameValuePairs = new LinkedList<>();
+        nameValuePairs.add(new BasicNameValuePair("token", token));
+
+        RevokeTokenResponse revokeTokenResponse = this.executePost(endpoint, RevokeTokenResponse.class, nameValuePairs);
+
+        return revokeTokenResponse;
+    }
+
+    public BotInfoResponse getBotInfo(String accessToken, String bot) {
+        logger.trace("accessToken[{}] bot[{bot}]", accessToken, bot);
+
+        final String endpoint = "bots.info";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        if(!StringUtils.isEmpty(bot))
+            params.add(new BasicNameValuePair("bot", bot));
+
+        BotInfoResponse botInfoResponse = this.executeGet(params, endpoint, BotInfoResponse.class);
+
+        return botInfoResponse;
+    }
+
+    public ChannelHistoryResponse getChannelHistory(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "channels.history";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        ChannelHistoryResponse channelHistoryResponse = this.executeGet(params, endpoint, ChannelHistoryResponse.class);
+
+        return channelHistoryResponse;
+    }
+
+    public ChannelRepliesResponse getChannelReplies(String accessToken, String channel, Double thread_ts) {
+        logger.trace("accessToken[{}] channel[{}] thread_ts[{}]", accessToken, channel, thread_ts);
+
+        final String endpoint = "channels.replies";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        DecimalFormat df = new DecimalFormat("#.000000");
+        params.add(new BasicNameValuePair("thread_ts", df.format(thread_ts)));
+
+        ChannelRepliesResponse channelRepliesResponse = this.executeGet(params, endpoint, ChannelRepliesResponse.class);
+
+        return channelRepliesResponse;
+    }
+
+    public ChannelInfoResponse getChannelInfo(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "channels.info";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        ChannelInfoResponse channelInfoResponse = this.executeGet(params, endpoint, ChannelInfoResponse.class);
+
+        return channelInfoResponse;
+    }
+
+    public ChannelListResponse getChannelList(String accessToken) {
+        logger.trace("accessToken[{}]", accessToken);
+
+        final String endpoint = "channels.list";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        ChannelListResponse channelListResponse = this.executeGet(params, endpoint, ChannelListResponse.class);
+
+        return channelListResponse;
     }
 
     public PostMessageResponse sendDirectMessage(String accessToken, String channel, String text) {
@@ -100,79 +182,6 @@ public class SlackMessagingApi {
         ListUsersResponse listUsersResponse = this.executeGet(Collections.singletonList(new BasicNameValuePair("token", accessToken)), endpoint, ListUsersResponse.class);
 
         return listUsersResponse;
-    }
-
-    public BotInfoResponse getBotInfo(String accessToken, String bot) {
-        logger.trace("accessToken["+accessToken+"]");
-
-        final String endpoint = "bots.info";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-
-        if(!StringUtils.isEmpty(bot))
-            params.add(new BasicNameValuePair("bot", bot));
-
-        BotInfoResponse botInfoResponse = this.executeGet(params, endpoint, BotInfoResponse.class);
-
-        return botInfoResponse;
-    }
-
-    public ChannelHistoryResponse getChannelHistory(String accessToken, String channel) {
-        logger.trace("accessToken["+accessToken+"]");
-
-        final String endpoint = "channels.history";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        ChannelHistoryResponse channelHistoryResponse = this.executeGet(params, endpoint, ChannelHistoryResponse.class);
-
-        return channelHistoryResponse;
-    }
-
-    public ChannelRepliesResponse getChannelReplies(String accessToken, String channel, Double thread_ts) {
-        logger.trace("accessToken["+accessToken+"]");
-
-        final String endpoint = "channels.replies";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        DecimalFormat df = new DecimalFormat("#.000000");
-        params.add(new BasicNameValuePair("thread_ts", df.format(thread_ts)));
-
-        ChannelRepliesResponse channelRepliesResponse = this.executeGet(params, endpoint, ChannelRepliesResponse.class);
-
-        return channelRepliesResponse;
-    }
-
-    public ChannelInfoResponse getChannelInfo(String accessToken, String channel) {
-        logger.trace("accessToken["+accessToken+"]");
-
-        double f = 1234567890.123456;
-
-        final String endpoint = "channels.info";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        ChannelInfoResponse channelInfoResponse = this.executeGet(params, endpoint, ChannelInfoResponse.class);
-
-        return channelInfoResponse;
-    }
-
-    public ChannelListResponse getChannelList(String accessToken) {
-        logger.trace("accessToken["+accessToken+"]");
-
-        double f = 1234567890.123456;
-
-        final String endpoint = "channels.list";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-
-        ChannelListResponse channelListResponse = this.executeGet(params, endpoint, ChannelListResponse.class);
-
-        return channelListResponse;
     }
 
     private <T extends SlackResponse> T executeGet(List<NameValuePair> params, String endpoint, Class<T> clazz) {
@@ -243,17 +252,11 @@ public class SlackMessagingApi {
     }
 
     private String getAuthorizationURI(String redirectURI, List<Scope> scopes) {
-
-        List<String> scopesList = new LinkedList<>();
-        for(Scope scope : scopes) {
-            scopesList.add(scope.getScope());
-        }
-
         String uri = null;
         try {
             uri = "https://slack.com/oauth/authorize?client_id=" + this.clientId +
-                    "&scope=" + URLEncoder.encode(StringUtils.join(scopesList, " "), "UTF-8") +
-                    "&redirect_uri=" + URLEncoder.encode(redirectURI, "UTF-8");
+                    "&scope=" + URLEncoder.encode(StringUtils.join(scopes, " "), DEFAULT_ENCODING) +
+                    "&redirect_uri=" + URLEncoder.encode(redirectURI, DEFAULT_ENCODING);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
