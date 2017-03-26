@@ -35,12 +35,12 @@ public class SlackMessagingApi {
     private static final Logger logger = LoggerFactory.getLogger(SlackMessagingApi.class);
     private static final String END_POINT = "https://slack.com/api/";
 
-    private static final Set<String> DEFAULT_SCOPES = new HashSet<>(Arrays.asList(
-            "channels:read",
-            "chat:write:user",
-            "chat:write:bot",
-            "im:read",
-            "users:read"
+    private static final Set<Scope> DEFAULT_SCOPES = new HashSet<>(Arrays.asList(
+            Scope.CHANNELS_READ,
+            Scope.CHAT_WRITE_USER,
+            Scope.CHAT_WRITE_BOT,
+            Scope.IM_READ,
+            Scope.USERS_READ
     ));
 
     private String clientId;
@@ -158,16 +158,29 @@ public class SlackMessagingApi {
     }
 
     public String getAuthorizationURI(String redirectURI) {
-        final String scope = StringUtils.join(DEFAULT_SCOPES, " ");
-        return this.getAuthorizationURI(redirectURI, scope);
+        return this.getAuthorizationURI(redirectURI, new ArrayList<>(DEFAULT_SCOPES));
     }
 
-    public String getAuthorizationURI(String redirectURI, String scope) {
+    public String getAuthorizationURI(String redirectURI, Scope... scopes) {
+        List<Scope> scopesList = new LinkedList<>();
+        for(Scope scope : scopes) {
+            scopesList.add(scope);
+        }
+
+        return this.getAuthorizationURI(redirectURI, scopesList);
+    }
+
+    private String getAuthorizationURI(String redirectURI, List<Scope> scopes) {
+
+        List<String> scopesList = new LinkedList<>();
+        for(Scope scope : scopes) {
+            scopesList.add(scope.getScope());
+        }
 
         String uri = null;
         try {
             uri = "https://slack.com/oauth/authorize?client_id=" + this.clientId +
-                    "&scope=" + URLEncoder.encode(scope, "UTF-8") +
+                    "&scope=" + URLEncoder.encode(StringUtils.join(scopesList, " "), "UTF-8") +
                     "&redirect_uri=" + URLEncoder.encode(redirectURI, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
