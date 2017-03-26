@@ -2,11 +2,13 @@ package com.slack;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slack.dto.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -19,8 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,6 +34,14 @@ public class SlackMessagingApi {
 
     private static final Logger logger = LoggerFactory.getLogger(SlackMessagingApi.class);
     private static final String END_POINT = "https://slack.com/api/";
+
+    private static final Set<String> DEFAULT_SCOPES = new HashSet<>(Arrays.asList(
+            "channels:read",
+            "chat:write:user",
+            "chat:write:bot",
+            "im:read",
+            "users:read"
+    ));
 
     private String clientId;
     private String clientSecret;
@@ -53,7 +62,7 @@ public class SlackMessagingApi {
         nameValuePairs.add(new BasicNameValuePair("code", code));
         nameValuePairs.add(new BasicNameValuePair("redirect_uri", redirect_uri));
 
-        AccessTokenResponse accessTokenResponse = this.execute(endpoint, AccessTokenResponse.class, nameValuePairs);
+        AccessTokenResponse accessTokenResponse = this.executePost(endpoint, AccessTokenResponse.class, nameValuePairs);
 
         return accessTokenResponse;
     }
@@ -69,7 +78,7 @@ public class SlackMessagingApi {
         nameValuePairs.add(new BasicNameValuePair("text", text));
         nameValuePairs.add(new BasicNameValuePair("as_user", "true"));
 
-        PostMessageResponse messageResponse = this.execute(endpoint, PostMessageResponse.class, nameValuePairs);
+        PostMessageResponse messageResponse = this.executePost(endpoint, PostMessageResponse.class, nameValuePairs);
 
         return messageResponse;
     }
@@ -122,7 +131,7 @@ public class SlackMessagingApi {
         return slackResponse;
     }
 
-    private <T extends SlackResponse> T execute(String endpoint, Class<T> clazz, List<NameValuePair> nameValuePairs) {
+    private <T extends SlackResponse> T executePost(String endpoint, Class<T> clazz, List<NameValuePair> nameValuePairs) {
         logger.trace("endpoint[{}] clazz[{}] nameValuePairs[{}]", endpoint, clazz, nameValuePairs);
 
         T slackResponse = null;
@@ -149,7 +158,7 @@ public class SlackMessagingApi {
     }
 
     public String getAuthorizationURI(String redirectURI) {
-        final String scope = "channels:read chat:write:user chat:write:bot im:read users:read";
+        final String scope = StringUtils.join(DEFAULT_SCOPES, " ");
         return this.getAuthorizationURI(redirectURI, scope);
     }
 
