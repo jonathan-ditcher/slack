@@ -43,6 +43,7 @@ public class SlackMessagingApi {
             Scope.IM_READ,
             Scope.USERS_READ
     ));
+    private static final String TIMESTAMP_FORMAT = "#.000000";
 
     private String clientId;
     private String clientSecret;
@@ -117,7 +118,7 @@ public class SlackMessagingApi {
         params.add(new BasicNameValuePair("token", accessToken));
         params.add(new BasicNameValuePair("channel", channel));
 
-        DecimalFormat df = new DecimalFormat("#.000000");
+        DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
         params.add(new BasicNameValuePair("thread_ts", df.format(thread_ts)));
 
         ChannelRepliesResponse channelRepliesResponse = this.executeGet(params, endpoint, ChannelRepliesResponse.class);
@@ -238,7 +239,7 @@ public class SlackMessagingApi {
         params.add(new BasicNameValuePair("token", accessToken));
         params.add(new BasicNameValuePair("name", channel));
 
-        DecimalFormat df = new DecimalFormat("#.000000");
+        DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
         params.add(new BasicNameValuePair("ts", df.format(timestamp)));
 
         SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
@@ -295,6 +296,68 @@ public class SlackMessagingApi {
         List<NameValuePair> params = new LinkedList<>();
         params.add(new BasicNameValuePair("token", accessToken));
         params.add(new BasicNameValuePair("channel", channel));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse deleteChatMessage(String accessToken, String channel, Double timestamp) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "chat.delete";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+        params.add(new BasicNameValuePair("ts", df.format(timestamp)));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse sendMeMessage(String accessToken, String channel, String text) {
+        logger.trace("accessToken[{}] channel[{}] text[{}]", accessToken, channel, text);
+
+        final String endpoint = "chat.meMessage";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("text", text));
+        params.add(new BasicNameValuePair("as_user", "true"));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse postMessage(String accessToken, String channel, String text) {
+        logger.trace("accessToken[{}] channel[{}] text[{}]", accessToken, channel, text);
+
+        final String endpoint = "chat.postMessage";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("text", text));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse updateMessage(String accessToken, String channel, String text, Double timestamp) {
+        logger.trace("accessToken[{}] channel[{}] text[{}]", accessToken, channel, text);
+
+        final String endpoint = "chat.update";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("text", text));
+
+        DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+        params.add(new BasicNameValuePair("ts", df.format(timestamp)));
 
         SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
 
