@@ -1,5 +1,6 @@
-package com.slack.dto;
+package com.ditcherj.slack.responses;
 
+import com.ditcherj.slack.dto.Channel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;

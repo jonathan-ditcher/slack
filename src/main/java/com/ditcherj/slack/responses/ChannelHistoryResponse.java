@@ -1,5 +1,6 @@
-package com.slack.dto;
+package com.ditcherj.slack.responses;
 
+import com.ditcherj.slack.dto.MessageEvent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
@@ -8,11 +9,20 @@ import java.util.List;
  * Created by jon on 26/03/2017.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ChannelRepliesResponse extends SlackResponse {
+public class ChannelHistoryResponse extends SlackResponse {
 
+    private Long latest;
     private List<MessageEvent> messages;
 
-    public ChannelRepliesResponse() {
+    public ChannelHistoryResponse() {
+    }
+
+    public Long getLatest() {
+        return latest;
+    }
+
+    public void setLatest(Long latest) {
+        this.latest = latest;
     }
 
     public List<MessageEvent> getMessages() {
@@ -25,8 +35,9 @@ public class ChannelRepliesResponse extends SlackResponse {
 
     @Override
     public String toString() {
-        return "ChannelRepliesResponse{" +
-                "messages=" + messages +
+        return "ChannelHistoryResponse{" +
+                "latest=" + latest +
+                ", messages=" + messages +
                 '}';
     }
 }

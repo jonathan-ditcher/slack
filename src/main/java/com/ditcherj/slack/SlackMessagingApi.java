@@ -1,7 +1,8 @@
-package com.slack;
+package com.ditcherj.slack;
 
+import com.ditcherj.slack.dto.Scope;
+import com.ditcherj.slack.responses.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.slack.dto.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -36,6 +37,7 @@ public class SlackMessagingApi {
     private static final Logger logger = LoggerFactory.getLogger(SlackMessagingApi.class);
     private static final String END_POINT = "https://slack.com/api/";
     private static final String DEFAULT_ENCODING = "UTF-8";
+    private static final String TIMESTAMP_FORMAT = "#.000000";
     private static final Set<Scope> DEFAULT_SCOPES = new HashSet<>(Arrays.asList(
             Scope.CHANNELS_READ,
             Scope.CHAT_WRITE_USER,
@@ -43,7 +45,6 @@ public class SlackMessagingApi {
             Scope.IM_READ,
             Scope.USERS_READ
     ));
-    private static final String TIMESTAMP_FORMAT = "#.000000";
 
     private String clientId;
     private String clientSecret;
@@ -96,6 +97,8 @@ public class SlackMessagingApi {
 
         return botInfoResponse;
     }
+
+    // channel methods
 
     public ChannelHistoryResponse getChannelHistory(String accessToken, String channel) {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
@@ -302,6 +305,8 @@ public class SlackMessagingApi {
         return response;
     }
 
+    // chat methods
+
     public SlackResponse deleteChatMessage(String accessToken, String channel, Double timestamp) {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
@@ -364,18 +369,343 @@ public class SlackMessagingApi {
         return response;
     }
 
+    // dnd methods
+
+    public SlackResponse endDnd(String accessToken) {
+        logger.trace("accessToken[{}]", accessToken);
+
+        final String endpoint = "dnd.endDnd";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse endSnooze(String accessToken) {
+        logger.trace("accessToken[{}]", accessToken);
+
+        final String endpoint = "dnd.endSnooze";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public DndInfoResponse getDndInfo(String accessToken, String user) {
+        logger.trace("accessToken[{}] user[{}]", accessToken, user);
+
+        final String endpoint = "dnd.info";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("user", user));
+
+        DndInfoResponse response = this.executeGet(params, endpoint, DndInfoResponse.class);
+
+        return response;
+    }
+
+    public DndInfoResponse setSnooze(String accessToken, Integer num_minutes) {
+        logger.trace("accessToken[{}] num_minutes[{}]", accessToken, num_minutes);
+
+        final String endpoint = "dnd.setSnooze";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("num_minutes", String.valueOf(num_minutes)));
+
+        DndInfoResponse response = this.executePost(params, endpoint, DndInfoResponse.class);
+
+        return response;
+    }
+
+    // emoji methods
+
+    public EmojiListResponse getEmojiList(String accessToken) {
+        logger.trace("accessToken[{}]", accessToken);
+
+        final String endpoint = "emoji.liste";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        EmojiListResponse response = this.executeGet(params, endpoint, EmojiListResponse.class);
+
+        return response;
+    }
+
+    // files comments methods
+
+    public FileCommentResponse addCommentToFile(String accessToken, String file, String comment) {
+        logger.trace("accessToken[{}] file[{}] comment[{}]", accessToken, file, comment);
+
+        final String endpoint = "files.comments.add";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("file", file));
+        params.add(new BasicNameValuePair("comment", comment));
+
+        FileCommentResponse response = this.executePost(params, endpoint, FileCommentResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse deleteCommentFromFile(String accessToken, String file, String commentId) {
+        logger.trace("accessToken[{}] file[{}] commentId[{}]", accessToken, file, commentId);
+
+        final String endpoint = "files.comments.delete";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("file", file));
+        params.add(new BasicNameValuePair("id", commentId));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public FileCommentResponse editCommentOnFile(String accessToken, String file, String commentId, String comment) {
+        logger.trace("accessToken[{}] file[{}] commentId[{}] comment[{}]", accessToken, file, commentId, comment);
+
+        final String endpoint = "files.comments.edit";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("file", file));
+        params.add(new BasicNameValuePair("id", commentId));
+        params.add(new BasicNameValuePair("comment", comment));
+
+        FileCommentResponse response = this.executePost(params, endpoint, FileCommentResponse.class);
+
+        return response;
+    }
+
+    // files methods
+
+    public SlackResponse deleteFile(String accessToken, String file) {
+        logger.trace("accessToken[{}] file[{}]", accessToken, file);
+
+        final String endpoint = "files.delete";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("file", file));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public FileResponse getFileInfo(String accessToken, String file) {
+        logger.trace("accessToken[{}] file[{}]", accessToken, file);
+
+        final String endpoint = "files.info";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("file", file));
+
+        FileResponse response = this.executeGet(params, endpoint, FileResponse.class);
+
+        return response;
+    }
+
+    public ListFilesResponse listFiles(String accessToken) {
+        logger.trace("accessToken[{}]", accessToken);
+
+        final String endpoint = "files.list";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        ListFilesResponse response = this.executeGet(params, endpoint, ListFilesResponse.class);
+
+        return response;
+    }
+
+    public FileResponse enablePublicFileSharing(String accessToken, String file) {
+        logger.trace("accessToken[{}] file[{}]", accessToken, file);
+
+        final String endpoint = "files.sharedPublicURL";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("file", file));
+
+        FileResponse response = this.executeGet(params, endpoint, FileResponse.class);
+
+        return response;
+    }
+
+    public FileResponse revokeublicFileSharing(String accessToken, String file) {
+        logger.trace("accessToken[{}] file[{}]", accessToken, file);
+
+        final String endpoint = "files.revokePublicURL";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("file", file));
+
+        FileResponse response = this.executeGet(params, endpoint, FileResponse.class);
+
+        return response;
+    }
+/*
+https://api.slack.com/methods/files.upload
+    public FileResponse uploadFile(String accessToken, File file) {
+        logger.trace("accessToken[{}] file[{}]", accessToken, file);
+
+        final String endpoint = "files.upload";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("file", file));
+
+        FileResponse response = this.executePost(params, endpoint, FileResponse.class);
+
+        return response;
+    }
+*/
+
+    // group methods
+
+    public SlackResponse archivePrivateChannel(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "groups.archive";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse closePrivateChannel(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "groups.close";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public GroupResponse createPrivateChannel(String accessToken, String name) {
+        logger.trace("accessToken[{}] name[{}]", accessToken, name);
+
+        final String endpoint = "groups.create";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("name", name));
+
+        GroupResponse response = this.executePost(params, endpoint, GroupResponse.class);
+
+        return response;
+    }
+
+    public GroupResponse createChildPrivateChannel(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "groups.createChild";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        GroupResponse response = this.executePost(params, endpoint, GroupResponse.class);
+
+        return response;
+    }
+
+    public GroupsHistoryResponse getGroupsHistory(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "groups.history";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        GroupsHistoryResponse response = this.executeGet(params, endpoint, GroupsHistoryResponse.class);
+
+        return response;
+    }
+
+    public GroupResponse getGroupInfo(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "groups.info";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        GroupResponse response = this.executeGet(params, endpoint, GroupResponse.class);
+
+        return response;
+    }
+
+    public GroupResponse inviteUserToPrivateChannel(String accessToken, String channel, String user) {
+        logger.trace("accessToken[{}] channel[{}] user[{}]", accessToken, channel, user);
+
+        final String endpoint = "groups.invite";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("user", user));
+
+        GroupResponse response = this.executeGet(params, endpoint, GroupResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse removeUserFromPrivateChannel(String accessToken, String channel, String user) {
+        logger.trace("accessToken[{}] channel[{}] user[{}]", accessToken, channel, user);
+
+        final String endpoint = "groups.kick";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("user", user));
+
+        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse leavePrivateChannel(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "groups.leave";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public GroupsListResponse listPrivateChannels(String accessToken) {
+        logger.trace("accessToken[{}]", accessToken);
+
+        final String endpoint = "groups.list";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        GroupsListResponse response = this.executeGet(params, endpoint, GroupsListResponse.class);
+
+        return response;
+    }
+
     public PostMessageResponse sendDirectMessage(String accessToken, String channel, String text) {
         logger.trace("accessToken[{}] channel[{}] text[{}]", accessToken, channel, text);
 
         final String endpoint = "chat.postMessage";
 
-        List<NameValuePair> nameValuePairs = new LinkedList<>();
-        nameValuePairs.add(new BasicNameValuePair("token", accessToken));
-        nameValuePairs.add(new BasicNameValuePair("channel", channel));
-        nameValuePairs.add(new BasicNameValuePair("text", text));
-        nameValuePairs.add(new BasicNameValuePair("as_user", "true"));
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("text", text));
+        params.add(new BasicNameValuePair("as_user", "true"));
 
-        PostMessageResponse messageResponse = this.executePost(nameValuePairs, endpoint, PostMessageResponse.class);
+        PostMessageResponse messageResponse = this.executePost(params, endpoint, PostMessageResponse.class);
 
         return messageResponse;
     }

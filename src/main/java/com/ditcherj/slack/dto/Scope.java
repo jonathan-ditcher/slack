@@ -1,4 +1,4 @@
-package com.slack.dto;
+package com.ditcherj.slack.dto;
 
 /**
  * Created by jon on 26/03/2017.

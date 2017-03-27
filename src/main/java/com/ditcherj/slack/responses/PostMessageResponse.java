@@ -1,4 +1,4 @@
-package com.slack.dto;
+package com.ditcherj.slack.responses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
