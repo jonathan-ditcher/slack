@@ -151,6 +151,7 @@ public class MessageEvent {
                 '}';
     }
 
+
     public static class Edit {
 
         private String user;
