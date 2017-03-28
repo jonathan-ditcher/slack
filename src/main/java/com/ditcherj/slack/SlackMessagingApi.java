@@ -694,6 +694,106 @@ https://api.slack.com/methods/files.upload
         return response;
     }
 
+    public SlackResponse markPrivateChannel(String accessToken, String channel, Double timestamp) {
+        logger.trace("accessToken[{}] channel[{}] timestamp[{}]", accessToken, channel, timestamp);
+
+        final String endpoint = "groups.mark";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+        params.add(new BasicNameValuePair("ts", df.format(timestamp)));
+
+        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse openPrivateChannel(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "groups.open";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public ChannelRepliesResponse getPrivateChannelRepliesForMessage(String accessToken, String channel, Double timestamp) {
+        logger.trace("accessToken[{}] channel[{}] timestamp[{}]", accessToken, channel, timestamp);
+
+        final String endpoint = "groups.replies";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+        params.add(new BasicNameValuePair("thread_ts", df.format(timestamp)));
+
+        ChannelRepliesResponse response = this.executeGet(params, endpoint, ChannelRepliesResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse setPrivateChannelPurpose(String accessToken, String channel, String purpose) {
+        logger.trace("accessToken[{}] channel[{}] purpose[{}]", accessToken, channel, purpose);
+
+        final String endpoint = "groups.setPurpose";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("purpose", purpose));
+
+        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse setPrivateChannelTopic(String accessToken, String channel, String topic) {
+        logger.trace("accessToken[{}] channel[{}] topic[{}]", accessToken, channel, topic);
+
+        final String endpoint = "groups.setTopic";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("topic", topic));
+
+        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse unarchivePrivateChannel(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "groups.unarchive";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public ChannelInfoResponse renamePrivateChannel(String accessToken, String channel, String name) {
+        logger.trace("accessToken[{}] channel[{}] name[{}]", accessToken, channel, name);
+
+        final String endpoint = "groups.rename";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+        params.add(new BasicNameValuePair("name", name));
+
+        ChannelInfoResponse response = this.executeGet(params, endpoint, ChannelInfoResponse.class);
+
+        return response;
+    }
+
     public PostMessageResponse sendDirectMessage(String accessToken, String channel, String text) {
         logger.trace("accessToken[{}] channel[{}] text[{}]", accessToken, channel, text);
 

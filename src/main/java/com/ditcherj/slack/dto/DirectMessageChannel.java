@@ -10,23 +10,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * To change this template use File | Settings | File Templates.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class DirectMessageChannel {
+public class DirectMessageChannel extends Channel {
 
-    private String id;
     private Boolean is_im;
     private String user;
-    private Long created;
     private Boolean is_user_deleted;
 
     public DirectMessageChannel() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public Boolean getIs_im() {
@@ -45,14 +35,6 @@ public class DirectMessageChannel {
         this.user = user;
     }
 
-    public Long getCreated() {
-        return created;
-    }
-
-    public void setCreated(Long created) {
-        this.created = created;
-    }
-
     public Boolean getIs_user_deleted() {
         return is_user_deleted;
     }
@@ -64,12 +46,10 @@ public class DirectMessageChannel {
     @Override
     public String toString() {
         return "DirectMessageChannel{" +
-                "id='" + id + '\'' +
-                ", is_im=" + is_im +
+                "is_im=" + is_im +
                 ", user='" + user + '\'' +
-                ", created=" + created +
                 ", is_user_deleted=" + is_user_deleted +
-                '}';
+                "} " + super.toString();
     }
 }
 
