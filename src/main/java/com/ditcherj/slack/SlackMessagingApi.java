@@ -102,15 +102,8 @@ public class SlackMessagingApi {
 
     public ChannelHistoryResponse getChannelHistory(String accessToken, String channel) {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
-
         final String endpoint = "channels.history";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        ChannelHistoryResponse channelHistoryResponse = this.executeGet(params, endpoint, ChannelHistoryResponse.class);
-
-        return channelHistoryResponse;
+        return this.execute(accessToken, channel, endpoint, ChannelHistoryResponse.class);
     }
 
     public ChannelRepliesResponse getChannelReplies(String accessToken, String channel, Double thread_ts) {
@@ -133,13 +126,7 @@ public class SlackMessagingApi {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "channels.info";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        ChannelInfoResponse channelInfoResponse = this.executeGet(params, endpoint, ChannelInfoResponse.class);
-
-        return channelInfoResponse;
+        return this.execute(accessToken, channel, endpoint, ChannelInfoResponse.class);
     }
 
     public ChannelListResponse getChannelList(String accessToken) {
@@ -158,13 +145,7 @@ public class SlackMessagingApi {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "channels.archive";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
     }
 
     public ChannelResponse createChannel(String accessToken, String name) {
@@ -198,13 +179,7 @@ public class SlackMessagingApi {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "channels.join";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("name", channel));
-
-        ChannelResponse response = this.executePost(params, endpoint, ChannelResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, ChannelResponse.class);
     }
 
     public SlackResponse kickUserFromChannel(String accessToken, String channel, String user) {
@@ -225,13 +200,7 @@ public class SlackMessagingApi {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "channels.leave";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("name", channel));
-
-        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
     }
 
     public SlackResponse markChannel(String accessToken, String channel, Double timestamp) {
@@ -296,13 +265,7 @@ public class SlackMessagingApi {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "channels.unarchive";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
     }
 
     // chat methods
@@ -567,26 +530,14 @@ https://api.slack.com/methods/files.upload
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "groups.archive";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
     }
 
     public SlackResponse closePrivateChannel(String accessToken, String channel) {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "groups.close";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
     }
 
     public GroupResponse createPrivateChannel(String accessToken, String name) {
@@ -606,39 +557,21 @@ https://api.slack.com/methods/files.upload
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "groups.createChild";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        GroupResponse response = this.executePost(params, endpoint, GroupResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, GroupResponse.class);
     }
 
-    public GroupsHistoryResponse getGroupsHistory(String accessToken, String channel) {
+    public ChannelHistoryResponse getGroupsHistory(String accessToken, String channel) {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "groups.history";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        GroupsHistoryResponse response = this.executeGet(params, endpoint, GroupsHistoryResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, ChannelHistoryResponse.class);
     }
 
     public GroupResponse getGroupInfo(String accessToken, String channel) {
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "groups.info";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        GroupResponse response = this.executeGet(params, endpoint, GroupResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, GroupResponse.class);
     }
 
     public GroupResponse inviteUserToPrivateChannel(String accessToken, String channel, String user) {
@@ -673,13 +606,7 @@ https://api.slack.com/methods/files.upload
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "groups.leave";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
     }
 
     public GroupsListResponse listPrivateChannels(String accessToken) {
@@ -714,13 +641,7 @@ https://api.slack.com/methods/files.upload
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "groups.open";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
     }
 
     public ChannelRepliesResponse getPrivateChannelRepliesForMessage(String accessToken, String channel, Double timestamp) {
@@ -771,13 +692,7 @@ https://api.slack.com/methods/files.upload
         logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
 
         final String endpoint = "groups.unarchive";
-        List<NameValuePair> params = new LinkedList<>();
-        params.add(new BasicNameValuePair("token", accessToken));
-        params.add(new BasicNameValuePair("channel", channel));
-
-        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
-
-        return response;
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
     }
 
     public ChannelInfoResponse renamePrivateChannel(String accessToken, String channel, String name) {
@@ -794,6 +709,76 @@ https://api.slack.com/methods/files.upload
         return response;
     }
 
+    // direct message methods
+
+    public SlackResponse closeDirectMessageChannel(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "im.close";
+        return this.execute(accessToken, channel, endpoint, SlackResponse.class);
+    }
+
+    public ChannelHistoryResponse getDirectMessageChannelHistory(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "im.history";
+        return this.execute(accessToken, channel, endpoint, ChannelHistoryResponse.class);
+    }
+
+    public ListChannelsResponse listDirectMssageChannels(String accessToken) {
+        logger.trace("accessToken["+accessToken+"]");
+
+        final String endpoint = "im.list";
+        ListChannelsResponse listChannelsResponse = this.executeGet(Collections.singletonList(new BasicNameValuePair("token", accessToken)), endpoint, ListChannelsResponse.class);
+
+        return listChannelsResponse;
+    }
+
+    public SlackResponse markDirectMessageChannel(String accessToken, String channel, Double timestamp) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "im.mark";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("name", channel));
+
+        DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+        params.add(new BasicNameValuePair("ts", df.format(timestamp)));
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public SlackResponse openDirectMessageChannel(String accessToken, String user) {
+        logger.trace("accessToken[{}] user[{}]", accessToken, user);
+
+        final String endpoint = "im.open";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("user", user));
+
+        SlackResponse response = this.executeGet(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public ChannelRepliesResponse getDirectMessageChannelReplies(String accessToken, String channel, Double thread_ts) {
+        logger.trace("accessToken[{}] channel[{}] thread_ts[{}]", accessToken, channel, thread_ts);
+
+        final String endpoint = "im.replies";
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+        params.add(new BasicNameValuePair("thread_ts", df.format(thread_ts)));
+
+        ChannelRepliesResponse channelRepliesResponse = this.executeGet(params, endpoint, ChannelRepliesResponse.class);
+
+        return channelRepliesResponse;
+    }
+
     public PostMessageResponse sendDirectMessage(String accessToken, String channel, String text) {
         logger.trace("accessToken[{}] channel[{}] text[{}]", accessToken, channel, text);
 
@@ -805,19 +790,211 @@ https://api.slack.com/methods/files.upload
         params.add(new BasicNameValuePair("text", text));
         params.add(new BasicNameValuePair("as_user", "true"));
 
-        PostMessageResponse messageResponse = this.executePost(params, endpoint, PostMessageResponse.class);
+        PostMessageResponse response = this.executePost(params, endpoint, PostMessageResponse.class);
 
-        return messageResponse;
+        return response;
     }
 
-    public ListChannelsResponse listIMChannels(String accessToken) {
-        logger.trace("accessToken["+accessToken+"]");
+    // pins methods
 
-        final String endpoint = "im.list";
-        ListChannelsResponse listChannelsResponse = this.executeGet(Collections.singletonList(new BasicNameValuePair("token", accessToken)), endpoint, ListChannelsResponse.class);
+    public SlackResponse pinItemToChannel(String accessToken, String channel, String file, String file_comment, Double timestamp) {
+        logger.trace("accessToken[{}] channel[{}] file[{}] file_comment[{}] timestamp[{}]", accessToken, channel, file, file_comment, timestamp);
 
-        return listChannelsResponse;
+        final String endpoint = "pins.add";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        if(!StringUtils.isEmpty(file))
+            params.add(new BasicNameValuePair("file", file));
+        if(!StringUtils.isEmpty(file_comment))
+            params.add(new BasicNameValuePair("file_comment", file_comment));
+        if(timestamp != null) {
+            DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+            params.add(new BasicNameValuePair("timestamp", df.format(timestamp)));
+        }
+
+        SlackResponse response = this.executePost(params, endpoint, PostMessageResponse.class);
+
+        return response;
     }
+
+    public ListPinsResponse listPins(String accessToken, String channel) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        final String endpoint = "pins.list";
+        return this.execute(accessToken, channel, endpoint, ListPinsResponse.class);
+    }
+
+    public SlackResponse unpinItemFromChannel(String accessToken, String channel, String file, String file_comment, Double timestamp) {
+        logger.trace("accessToken[{}] channel[{}] file[{}] file_comment[{}] timestamp[{}]", accessToken, channel, file, file_comment, timestamp);
+
+        final String endpoint = "pins.remove";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        if(!StringUtils.isEmpty(file))
+            params.add(new BasicNameValuePair("file", file));
+        if(!StringUtils.isEmpty(file_comment))
+            params.add(new BasicNameValuePair("file_comment", file_comment));
+        if(timestamp != null) {
+            DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+            params.add(new BasicNameValuePair("timestamp", df.format(timestamp)));
+        }
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    // reactions methods
+
+    public SlackResponse addReaction(String accessToken, String name, String channel, String file, String file_comment, Double timestamp) {
+        logger.trace("accessToken[{}] name[{} channel[{}] file[{}] file_comment[{}] timestamp[{}]", accessToken, name, channel, file, file_comment, timestamp);
+
+        final String endpoint = "reactions.add";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("name", name));
+
+        if(!StringUtils.isEmpty(channel))
+            params.add(new BasicNameValuePair("channel", channel));
+        if(!StringUtils.isEmpty(file))
+            params.add(new BasicNameValuePair("file", file));
+        if(!StringUtils.isEmpty(file_comment))
+            params.add(new BasicNameValuePair("file_comment", file_comment));
+        if(timestamp != null) {
+            DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+            params.add(new BasicNameValuePair("timestamp", df.format(timestamp)));
+        }
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    public GetReactionResponse getReaction(String accessToken, String channel, String file, String file_comment, Double timestamp) {
+        logger.trace("accessToken[{}] channel[{}] file[{}] file_comment[{}] timestamp[{}]", accessToken, channel, file, file_comment, timestamp);
+
+        final String endpoint = "reactions.get";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        if(!StringUtils.isEmpty(channel))
+            params.add(new BasicNameValuePair("channel", channel));
+        if(!StringUtils.isEmpty(file))
+            params.add(new BasicNameValuePair("file", file));
+        if(!StringUtils.isEmpty(file_comment))
+            params.add(new BasicNameValuePair("file_comment", file_comment));
+        if(timestamp != null) {
+            DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+            params.add(new BasicNameValuePair("timestamp", df.format(timestamp)));
+        }
+
+        GetReactionResponse response = this.executePost(params, endpoint, GetReactionResponse.class);
+
+        return response;
+    }
+
+    // @TODO list reactions https://api.slack.com/methods/reactions.list
+
+    public SlackResponse removeReaction(String accessToken, String name, String channel, String file, String file_comment, Double timestamp) {
+        logger.trace("accessToken[{}] name[{} channel[{}] file[{}] file_comment[{}] timestamp[{}]", accessToken, name, channel, file, file_comment, timestamp);
+
+        final String endpoint = "reactions.remove";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("name", name));
+
+        if(!StringUtils.isEmpty(channel))
+            params.add(new BasicNameValuePair("channel", channel));
+        if(!StringUtils.isEmpty(file))
+            params.add(new BasicNameValuePair("file", file));
+        if(!StringUtils.isEmpty(file_comment))
+            params.add(new BasicNameValuePair("file_comment", file_comment));
+        if(timestamp != null) {
+            DecimalFormat df = new DecimalFormat(TIMESTAMP_FORMAT);
+            params.add(new BasicNameValuePair("timestamp", df.format(timestamp)));
+        }
+
+        SlackResponse response = this.executePost(params, endpoint, SlackResponse.class);
+
+        return response;
+    }
+
+    // reminder methods
+
+    public ReminderResponse addReminder(String accessToken, String text, Long time, String user) {
+        logger.trace("accessToken[{}] text[{} time[{}] user[{}]", accessToken, text, time, user);
+
+        final String endpoint = "reminders.add";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("text", text));
+        params.add(new BasicNameValuePair("time", String.valueOf(time)));
+
+        if(!StringUtils.isEmpty(user))
+            params.add(new BasicNameValuePair("user", user));
+
+        return this.executePost(params, endpoint, ReminderResponse.class);
+    }
+
+    public SlackResponse completeReminder(String accessToken, String reminderId) {
+        logger.trace("accessToken[{}] reminderId[{}]", accessToken, reminderId);
+
+        final String endpoint = "reminders.complete";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("reminder", reminderId));
+
+        return this.executePost(params, endpoint, SlackResponse.class);
+    }
+
+    public SlackResponse deleteReminder(String accessToken, String reminderId) {
+        logger.trace("accessToken[{}] reminderId[{}]", accessToken, reminderId);
+
+        final String endpoint = "reminders.delete";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("reminder", reminderId));
+
+        return this.executePost(params, endpoint, SlackResponse.class);
+    }
+
+    public ReminderResponse getReminderInfo(String accessToken, String reminderId) {
+        logger.trace("accessToken[{}] reminderId[{}]", accessToken, reminderId);
+
+        final String endpoint = "reminders.info";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("reminder", reminderId));
+
+        return this.executePost(params, endpoint, ReminderResponse.class);
+    }
+
+    public ListRemindersResponse listReminders(String accessToken) {
+        logger.trace("accessToken[{}]", accessToken);
+
+        final String endpoint = "reminders.list";
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+
+        return this.executeGet(params, endpoint, ListRemindersResponse.class);
+    }
+
+    // @TODO rtm - https://api.slack.com/methods/rtm.start
+    // "TODO search - https://api.slack.com/methods/search.all, https://api.slack.com/methods/search.files, https://api.slack.com/methods/search.messages
 
     public ListUsersResponse listUsers(String accessToken) {
         logger.trace("accessToken["+accessToken+"]");
@@ -826,6 +1003,17 @@ https://api.slack.com/methods/files.upload
         ListUsersResponse listUsersResponse = this.executeGet(Collections.singletonList(new BasicNameValuePair("token", accessToken)), endpoint, ListUsersResponse.class);
 
         return listUsersResponse;
+    }
+
+    private <T extends SlackResponse> T execute(String accessToken, String channel, String endpoint, Class<T> clazz) {
+        logger.trace("accessToken[{}] channel[{}]", accessToken, channel);
+
+        List<NameValuePair> params = new LinkedList<>();
+        params.add(new BasicNameValuePair("token", accessToken));
+        params.add(new BasicNameValuePair("channel", channel));
+
+        T response = this.executeGet(params, endpoint, clazz);
+        return response;
     }
 
     private <T extends SlackResponse> T executeGet(List<NameValuePair> params, String endpoint, Class<T> clazz) {

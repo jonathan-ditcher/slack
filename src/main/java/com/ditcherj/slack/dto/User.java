@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * To change this template use File | Settings | File Templates.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class SlackUser {
+public class User {
 
     private String id;
     private String name;
@@ -23,9 +23,9 @@ public class SlackUser {
     private Long updated;
     private Boolean has_2fa;
     private String two_factor_type;
-    private SlackUserProfile profile;
+    private UserProfile profile;
 
-    public SlackUser() {
+    public User() {
     }
 
     public String getId() {
@@ -116,17 +116,17 @@ public class SlackUser {
         this.two_factor_type = two_factor_type;
     }
 
-    public SlackUserProfile getProfile() {
+    public UserProfile getProfile() {
         return profile;
     }
 
-    public void setProfile(SlackUserProfile profile) {
+    public void setProfile(UserProfile profile) {
         this.profile = profile;
     }
 
     @Override
     public String toString() {
-        return "SlackUser{" +
+        return "User{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", deleted=" + deleted +

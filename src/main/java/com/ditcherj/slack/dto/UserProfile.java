@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * To change this template use File | Settings | File Templates.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class SlackUserProfile {
+public class UserProfile {
 
     private String first_name;
     private String last_name;
@@ -25,7 +25,7 @@ public class SlackUserProfile {
     private String image_192;
     private String image_512;
 
-    public SlackUserProfile() {
+    public UserProfile() {
     }
 
     public String getFirst_name() {
@@ -126,7 +126,7 @@ public class SlackUserProfile {
 
     @Override
     public String toString() {
-        return "SlackUserProfile{" +
+        return "UserProfile{" +
                 "first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", real_name='" + real_name + '\'' +

@@ -11,17 +11,18 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ChannelHistoryResponse extends SlackResponse {
 
-    private Long latest;
+    private Double latest;
     private List<MessageEvent> messages;
+    private Boolean has_more;
 
     public ChannelHistoryResponse() {
     }
 
-    public Long getLatest() {
+    public Double getLatest() {
         return latest;
     }
 
-    public void setLatest(Long latest) {
+    public void setLatest(Double latest) {
         this.latest = latest;
     }
 
@@ -33,11 +34,20 @@ public class ChannelHistoryResponse extends SlackResponse {
         this.messages = messages;
     }
 
+    public Boolean getHas_more() {
+        return has_more;
+    }
+
+    public void setHas_more(Boolean has_more) {
+        this.has_more = has_more;
+    }
+
     @Override
     public String toString() {
         return "ChannelHistoryResponse{" +
                 "latest=" + latest +
                 ", messages=" + messages +
-                '}';
+                ", has_more=" + has_more +
+                "} " + super.toString();
     }
 }

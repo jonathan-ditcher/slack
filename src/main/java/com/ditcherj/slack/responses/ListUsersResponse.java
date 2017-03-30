@@ -1,6 +1,6 @@
 package com.ditcherj.slack.responses;
 
-import com.ditcherj.slack.dto.SlackUser;
+import com.ditcherj.slack.dto.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
@@ -15,16 +15,16 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ListUsersResponse extends SlackResponse {
 
-    private List<SlackUser> members;
+    private List<User> members;
 
     public ListUsersResponse() {
     }
 
-    public List<SlackUser> getMembers() {
+    public List<User> getMembers() {
         return members;
     }
 
-    public void setMembers(List<SlackUser> members) {
+    public void setMembers(List<User> members) {
         this.members = members;
     }
 
